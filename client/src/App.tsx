@@ -3,7 +3,7 @@ import { AuthProvider, useAuth } from './AuthContext';
 import LoginPage from './LoginPage';
 import PatientDashboard from './PatientDashboard';
 import AdminDashboard from './AdminDashboard';
-import { LogOut, Wind, User, ShieldCheck, Activity, Menu, X } from 'lucide-react';
+import { LogOut, Wind, User, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const AppContent: React.FC = () => {

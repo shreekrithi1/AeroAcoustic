@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Users, Activity, Search, CheckCircle2, Database, Filter, ShieldCheck, BarChart3, ExternalLink, RefreshCw, Clock, TrendingUp } from 'lucide-react';
+import { Users, Activity, Search, CheckCircle2, RefreshCw, ExternalLink } from 'lucide-react';
 
 interface Patient {
   id: string;

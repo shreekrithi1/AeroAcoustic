@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Wind, ArrowRight, User, ShieldCheck, Mail, Lock, ChevronRight } from 'lucide-react';
+import { Wind, ArrowRight, User, ShieldCheck } from 'lucide-react';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 
