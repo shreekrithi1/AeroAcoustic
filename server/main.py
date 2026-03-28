@@ -58,7 +58,8 @@ class TestResult(BaseModel):
     turbulence_flux: float = 0.0
     pathological_ratio: float = 0.0
     bandwidth: float = 0.0
-    clinical_zone: str = "unknown"  # green, yellow, red
+    clinical_zone: Optional[str] = "unknown"  # green, yellow, red
+    raw_wave: Optional[List[float]] = None # For overlay comparison
 
 class PatientResponse(BaseModel):
     id: str
@@ -166,13 +167,18 @@ async def record_baseline(file: UploadFile = File(...), user: dict = Depends(get
         if os.path.exists(tmp_path): os.remove(tmp_path)
 
 @app.post("/analyze", response_model=TestResult)
-async def analyze_breath(file: UploadFile = File(...), user: dict = Depends(get_current_user)):
+async def analyze_breath(
+    file: UploadFile = File(...), 
+    mode: Optional[str] = None,
+    user: dict = Depends(get_current_user)
+):
     if user["role"] != "patient":
         raise HTTPException(status_code=403, detail="Clinician role cannot perform personal analysis.")
     
     db = load_db()
     baseline = db["users"][user["id"]].get("baseline")
-    if not baseline:
+    
+    if not baseline and mode != "calibration":
         raise HTTPException(status_code=400, detail="No baseline recorded. Go to Labs first.")
 
     tmp_path = f"tmp_test_{uuid.uuid4()}.wav"
@@ -198,6 +204,19 @@ async def analyze_breath(file: UploadFile = File(...), user: dict = Depends(get_
             with open(hist_path, "r") as hf:
                 history = json.load(hf)
         
+        # If in calibration mode, return features without baseline comparison
+        if mode == "calibration":
+            return TestResult(
+                id=str(uuid.uuid4()),
+                timestamp=datetime.now().isoformat(),
+                score=100,
+                recommendation="Calibration capture successful.",
+                centroid=round(features["centroid"], 2),
+                peak_centroid=round(features.get("peak_centroid", features["centroid"]), 2),
+                deviation_percent=0.0,
+                clinical_zone="unknown",
+            )
+
         # Calculate score with full feature context + trend engine
         score, rec, clinical_zone = calculate_lung_health_score(
             baseline_centroid=baseline["centroid"],

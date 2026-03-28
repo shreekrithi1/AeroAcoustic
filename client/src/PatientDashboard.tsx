@@ -243,7 +243,6 @@ const PatientDashboard: React.FC = () => {
     const [lastResult, setLastResult] = useState<TestResult | null>(null);
     const [hasBaseline, setHasBaseline] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [step, setStep] = useState(1);
     const [status, setStatus] = useState<'green' | 'yellow' | 'red'>('green');
     
     // Onboarding / Calibration State
@@ -305,7 +304,7 @@ const PatientDashboard: React.FC = () => {
         }
     }, [audioBlob]);
 
-    const processNoiseFloor = async (blob: Blob) => {
+    const processNoiseFloor = async (_blob: Blob) => {
         setIsCalibratingNoise(false);
         // Simulate noise floor analysis (In production, this would use FFT on the blob)
         // Here we mock the result for the BME project requirements
@@ -318,7 +317,6 @@ const PatientDashboard: React.FC = () => {
             alert("Room too noisy for medical-grade calibration. Current: " + mockNoise + "dB");
         } else {
             setCalibrationPhase('protocol');
-            setStep(2);
         }
     };
 
@@ -344,7 +342,6 @@ const PatientDashboard: React.FC = () => {
                 if (maxVariance > 0.15) {
                     alert("Blows inconsistent (>" + (maxVariance * 100).toFixed(1) + "% variance). Please rest for 5 minutes and try again to avoid lung fatigue.");
                     setCalibrationBlowing([]);
-                    setStep(2);
                     return;
                 }
                 
@@ -352,7 +349,6 @@ const PatientDashboard: React.FC = () => {
                 await uploadBaseline(blob); // Use the last one or average (engine usually handles storage)
                 setCalibrationBlowing(updatedBlowing);
                 setCalibrationPhase('commitment');
-                setStep(3);
                 confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
             } else {
                 setCalibrationBlowing(updatedBlowing);
@@ -369,7 +365,6 @@ const PatientDashboard: React.FC = () => {
         try {
             await axios.post('http://localhost:8000/record-baseline', formData, { headers: { Authorization: `Bearer ${token}` } });
             setHasBaseline(true);
-            setStep(4);
             confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
         } catch (err) { alert('Calibration Failed.'); }
     };
@@ -469,7 +464,7 @@ const PatientDashboard: React.FC = () => {
                                 <p className="page-subtitle">Respiratory acoustic monitoring & diagnostic intelligence</p>
                             </div>
                             <div className="header-stats">
-                                <div className="stat-badge clickable" onClick={() => { setView('wizard'); setCalibrationPhase('calibration'); setStep(1); }}>
+                                <div className="stat-badge clickable" onClick={() => { setView('wizard'); setCalibrationPhase('calibration'); }}>
                                     <ShieldCheck size={16} />
                                     <span>{hasBaseline ? 'Baseline Synced' : 'No Baseline'}</span>
                                     {hasBaseline && <span style={{ marginLeft: 4, opacity: 0.6 }}>(Re-calibrate)</span>}
