@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ab58be7c-5e68-40a4-a104-24de732973c0",
+    "timestamp": "2026-03-28T12:38:58.618026",
+    "score": 1,
+    "recommendation": "Significant frequency shift detected. Use your rescue inhaler if needed and consult a doctor.",
+    "centroid": 4239.7213136429,
+    "deviation_percent": 31.63381559264127
+  },
+  {
+    "id": "dd57d1b0-8e73-480c-8c9c-fa5fa3f2c7cc",
+    "timestamp": "2026-03-28T12:39:41.829089",
+    "score": 1,
+    "recommendation": "Significant frequency shift detected. Use your rescue inhaler if needed and consult a doctor.",
+    "centroid": 5599.606801543889,
+    "deviation_percent": 73.85520287237722
+  },
+  {
+    "id": "eb8c1095-66c8-4870-8dd7-9b04d17780f4",
+    "timestamp": "2026-03-28T13:03:37.295491",
+    "score": 1,
+    "recommendation": "Critical spectral deviation (77.0%). Severe turbulence detected above 3000Hz threshold. Seek immediate medical evaluation. Use rescue medication now.",
+    "centroid": 5699.87,
+    "peak_centroid": 6837.77,
+    "deviation_percent": 76.97,
+    "hf_ratio": 0.2626,
+    "turbulence_flux": 183.62,
+    "pathological_ratio": 0.9263,
+    "bandwidth": 4546.74,
+    "clinical_zone": "red"
+  }
+]
