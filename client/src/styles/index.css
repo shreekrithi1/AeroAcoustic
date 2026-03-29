@@ -676,6 +676,13 @@ body {
    SPECTRAL METRICS GRID
    ============================================ */
 
+.metrics-body {
+  max-height: 440px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .metrics-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
 }

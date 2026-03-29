@@ -522,7 +522,7 @@ const PatientDashboard: React.FC = () => {
                                     <h3>Spectral Metrics</h3>
                                     <Waves size={18} className="col-icon" />
                                 </div>
-                                <div className="col-card-body">
+                                <div className="col-card-body metrics-body">
                                     <div className="metrics-grid">
                                         <div className="metric-tile">
                                             <div className="metric-icon" style={{ color: '#6366f1', background: 'rgba(99,102,241,0.1)' }}>

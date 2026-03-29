@@ -28,5 +28,50 @@
     "pathological_ratio": 0.9263,
     "bandwidth": 4546.74,
     "clinical_zone": "red"
+  },
+  {
+    "id": "55bb1503-5d93-4b5e-9472-10d6ba555976",
+    "timestamp": "2026-03-28T22:50:46.360839",
+    "score": 1,
+    "recommendation": "Critical spectral deviation (+85.3%). Severe turbulence detected above 3000Hz threshold. Seek immediate medical evaluation. Use rescue medication now.",
+    "centroid": 5968.42,
+    "peak_centroid": 7457.72,
+    "deviation_percent": 85.31,
+    "hf_ratio": 0.3271,
+    "turbulence_flux": 277.1,
+    "pathological_ratio": 0.9124,
+    "bandwidth": 4718.04,
+    "clinical_zone": "red",
+    "raw_wave": null
+  },
+  {
+    "id": "13c16b93-9e30-464b-925d-e5dae1b44128",
+    "timestamp": "2026-03-28T23:06:32.985022",
+    "score": 21,
+    "recommendation": "Minor turbulence detected (-22.5% centroid shift). This suggests mild airway changes. Hydrate and re-test in 2 hours. If symptoms persist, consult your action plan.",
+    "centroid": 2497.31,
+    "peak_centroid": 5242.84,
+    "deviation_percent": -22.46,
+    "hf_ratio": 0.1529,
+    "turbulence_flux": 188.92,
+    "pathological_ratio": 0.2488,
+    "bandwidth": 3544.17,
+    "clinical_zone": "yellow",
+    "raw_wave": null
+  },
+  {
+    "id": "6ea0580a-d5df-4c9a-a08e-18338b8d0d14",
+    "timestamp": "2026-03-28T23:07:54.683496",
+    "score": 36,
+    "recommendation": "Minor turbulence detected (-17.4% centroid shift). This suggests mild airway changes. Hydrate and re-test in 2 hours. If symptoms persist, consult your action plan.",
+    "centroid": 2658.82,
+    "peak_centroid": 5827.83,
+    "deviation_percent": -17.45,
+    "hf_ratio": 0.2121,
+    "turbulence_flux": 178.18,
+    "pathological_ratio": 0.341,
+    "bandwidth": 3427.26,
+    "clinical_zone": "yellow",
+    "raw_wave": null
   }
 ]
