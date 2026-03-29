@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, CheckCircle2, History, Info, AlertTriangle, ShieldCheck, TrendingUp, Wind, Mic, ChevronRight, BarChart3, Heart, Waves, Zap, Volume2, X, Download, FileText, Share2 } from 'lucide-react';
+import { Activity, CheckCircle2, History, Info, AlertTriangle, ShieldCheck, TrendingUp, Wind, Mic, ChevronRight, BarChart3, Heart, Waves, Zap, Volume2, X, Download, FileText, Share2, RefreshCw } from 'lucide-react';
 import { useAudioRecorder } from './hooks/useAudioRecorder';
 import { Oscilloscope } from './components/Oscilloscope';
 import { CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, XAxis, YAxis } from 'recharts';
@@ -237,8 +237,7 @@ const ProgressRing: React.FC<{ progress: number; size?: number; color?: string }
 /* ============================================================
    MAIN PATIENT DASHBOARD
    ============================================================ */
-const PatientDashboard: React.FC = () => {
-    const [view, setView] = useState<'home' | 'wizard' | 'testing' | 'result'>('home');
+const PatientDashboard: React.FC<{ view: 'home' | 'wizard' | 'testing' | 'result' | 'history' | 'settings', setView: (v: any) => void }> = ({ view, setView }) => {
     const [history, setHistory] = useState<TestResult[]>([]);
     const [lastResult, setLastResult] = useState<TestResult | null>(null);
     const [hasBaseline, setHasBaseline] = useState(false);
@@ -1134,6 +1133,97 @@ const PatientDashboard: React.FC = () => {
                             <button onClick={() => setView('home')} className="btn-primary" style={{ width: 200, background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                                 Return Home
                             </button>
+                        </div>
+                    </motion.div>
+                )}
+
+                {view === 'history' && (
+                    <motion.div key="history" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <div className="page-header">
+                            <div>
+                                <h1 className="page-title" style={{ fontSize: 32 }}>Respiratory History</h1>
+                                <p className="page-subtitle">Long-term acoustic telemetry and diagnostic trends</p>
+                            </div>
+                            <button className="btn-primary" style={{ width: 'auto' }}>
+                                <Download size={18} /> Export Clinical PDF
+                            </button>
+                        </div>
+                        
+                        <div className="col-card" style={{ marginTop: 24, marginBottom: 24 }}>
+                            <div className="col-card-header">
+                                <h3>30-Day Frequency Shift Trend (%)</h3>
+                                <TrendingUp size={18} className="col-icon" />
+                            </div>
+                            <div className="col-card-body chart-body" style={{ height: 300, padding: '20px' }}>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <AreaChart data={history.slice(0, 30).reverse()} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
+                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e2030" />
+                                        <XAxis dataKey="timestamp" tickFormatter={(v) => new Date(v).toLocaleDateString([], { month: 'short', day: 'numeric' })} tick={{ fill: '#4a4c64', fontSize: 11 }} axisLine={false} tickLine={false} />
+                                        <YAxis domain={[0, 25]} tick={{ fill: '#4a4c64', fontSize: 11 }} axisLine={false} tickLine={false} unit="%" />
+                                        <Tooltip contentStyle={{ background: '#13141f', border: '1px solid #1e2030', borderRadius: 12 }} />
+                                        <Area type="monotone" dataKey="deviation_percent" stroke="var(--accent-start)" fill="rgba(99,102,241,0.1)" strokeWidth={3} dot={{ r: 4, fill: 'var(--accent-start)' }} />
+                                    </AreaChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+
+                        <div className="table-card">
+                            <div className="table-header"><h3>Recent Logs</h3><span className="table-count">{history.length} Entries</span></div>
+                            <div className="table-scroll">
+                                <table className="data-table">
+                                    <thead><tr><th>Timestamp</th><th>Health Score</th><th>Deviation</th><th>Triggers</th><th>Actions</th></tr></thead>
+                                    <tbody>
+                                        {history.map((h, i) => (
+                                            <tr key={i}>
+                                                <td style={{ fontSize: 13 }}>{new Date(h.timestamp).toLocaleString()}</td>
+                                                <td><span className="score-cell" style={{ color: getScoreColor(h.score) }}>{h.score}</span></td>
+                                                <td style={{ color: Math.abs(h.deviation_percent) > 15 ? 'var(--color-red)' : '' }}>{h.deviation_percent > 0 ? '+' : ''}{h.deviation_percent.toFixed(1)}%</td>
+                                                <td><div style={{ display: 'flex', gap: 4 }}>{h.tags?.map(t => <span key={t} style={{ fontSize: 9, background: 'rgba(255,255,255,0.05)', padding: '2px 6px', borderRadius: 4 }}>{t}</span>)}</div></td>
+                                                <td><button onClick={() => setOverlayResult(h)} className="table-action-btn"><Activity size={14} /></button></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </motion.div>
+                )}
+
+                {view === 'settings' && (
+                    <motion.div key="settings" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <div className="page-header">
+                            <div>
+                                <h1 className="page-title" style={{ fontSize: 32 }}>Settings</h1>
+                                <p className="page-subtitle">Account security and diagnostic calibration</p>
+                            </div>
+                        </div>
+                        
+                        <div className="three-col-grid" style={{ marginTop: 24 }}>
+                            <div className="col-card">
+                                <div className="col-card-header"><h3>Calibration</h3><RefreshCw size={18} /></div>
+                                <div className="col-card-body">
+                                    <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>Re-calibrate your baseline if your health status or long-term medication changes.</p>
+                                    <button onClick={() => { setView('wizard'); setCalibrationPhase('calibration'); }} className="btn-secondary" style={{ width: '100%', borderColor: 'var(--accent-start)', color: 'white' }}>
+                                        Restart Onboarding
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div className="col-card">
+                                <div className="col-card-header"><h3>Security</h3><ShieldCheck size={18} /></div>
+                                <div className="col-card-body">
+                                    <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>Manage your sessions and diagnostic encryption keys.</p>
+                                    <button className="btn-secondary" style={{ width: '100%' }}>Change Password</button>
+                                </div>
+                            </div>
+
+                            <div className="col-card">
+                                <div className="col-card-header"><h3>Export Data</h3><Download size={18} /></div>
+                                <div className="col-card-body">
+                                    <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 20 }}>Download all clinical telemetry for external medical review.</p>
+                                    <button className="btn-secondary" style={{ width: '100%' }}>Download JSON</button>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 )}

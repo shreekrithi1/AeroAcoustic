@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const AppContent: React.FC = () => {
     const { user, logout, isLoading } = useAuth();
     const [mobileMenu, setMobileMenu] = useState(false);
+    const [view, setView] = useState('home');
 
     if (isLoading) {
         return (
@@ -34,9 +35,9 @@ const AppContent: React.FC = () => {
                     </div>
 
                     <nav className="header-nav">
-                        <button className="nav-link active">Dashboard</button>
-                        <button className="nav-link">History</button>
-                        <button className="nav-link">Settings</button>
+                        <button onClick={() => setView('home')} className={`nav-link ${view === 'home' ? 'active' : ''}`}>Dashboard</button>
+                        <button onClick={() => setView('history')} className={`nav-link ${view === 'history' ? 'active' : ''}`}>History</button>
+                        <button onClick={() => setView('settings')} className={`nav-link ${view === 'settings' ? 'active' : ''}`}>Settings</button>
                     </nav>
 
                     <div className="header-actions">
@@ -66,9 +67,9 @@ const AppContent: React.FC = () => {
                         exit={{ opacity: 0, height: 0 }}
                         className="mobile-nav"
                     >
-                        <button className="mobile-nav-link active">Dashboard</button>
-                        <button className="mobile-nav-link">History</button>
-                        <button className="mobile-nav-link">Settings</button>
+                        <button onClick={() => { setView('home'); setMobileMenu(false); }} className={`mobile-nav-link ${view === 'home' ? 'active' : ''}`}>Dashboard</button>
+                        <button onClick={() => { setView('history'); setMobileMenu(false); }} className={`mobile-nav-link ${view === 'history' ? 'active' : ''}`}>History</button>
+                        <button onClick={() => { setView('settings'); setMobileMenu(false); }} className={`mobile-nav-link ${view === 'settings' ? 'active' : ''}`}>Settings</button>
                         <button onClick={logout} className="mobile-nav-link logout">Sign Out</button>
                     </motion.div>
                 )}
@@ -78,13 +79,13 @@ const AppContent: React.FC = () => {
             <main className="app-main">
                 <AnimatePresence mode="wait">
                     <motion.div
-                        key={user.role}
+                        key={view + user.role}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -8 }}
                         transition={{ duration: 0.3 }}
                     >
-                        {user.role === 'admin' ? <AdminDashboard /> : <PatientDashboard />}
+                        {user.role === 'admin' ? <AdminDashboard /> : <PatientDashboard view={view as any} setView={setView} />}
                     </motion.div>
                 </AnimatePresence>
             </main>
