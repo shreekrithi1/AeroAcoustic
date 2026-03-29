@@ -685,8 +685,7 @@ const PatientDashboard: React.FC = () => {
                                                         tickLine={false}
                                                     />
                                                     <YAxis
-                                                        domain={[0, 25]}
-                                                        ticks={[0, 5, 10, 15, 20, 25]}
+                                                        domain={[0, 'auto']}
                                                         tick={{ fill: '#4a4c64', fontSize: 11, fontWeight: 600 }}
                                                         axisLine={{ stroke: '#1e2030' }}
                                                         tickLine={false}
@@ -697,6 +696,7 @@ const PatientDashboard: React.FC = () => {
                                                         labelFormatter={(val: any) => new Date(String(val)).toLocaleString()}
                                                         formatter={(value: any) => [`${value}%`, 'Frequency Shift']}
                                                     />
+                                                    {/* Medical Zone Shading */}
                                                     <Area type="monotone" dataKey="deviation_percent" stroke="var(--status-color)" strokeWidth={3} fillOpacity={1} fill="url(#colorShift)" dot={{ r: 4, fill: 'var(--status-color)' }} />
                                                 </AreaChart>
                                             </ResponsiveContainer>
@@ -855,11 +855,26 @@ const PatientDashboard: React.FC = () => {
                                         
                                         <div style={{ 
                                             width: '100%', height: 120, background: 'rgba(255,255,255,0.03)', 
-                                            border: '1px dashed var(--border)', borderRadius: 12,
+                                            border: '1px dashed var(--accent-start)40', borderRadius: 12,
+                                            position: 'relative', overflow: 'hidden',
                                             display: 'flex', alignItems: 'center', justifyContent: 'center'
                                         }}>
-                                            <Waves size={40} className="text-muted" opacity={0.3} />
-                                            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Acoustic Signature 0xf832...</span>
+                                            <svg viewBox="0 0 200 60" style={{ width: '100%', height: '100%', opacity: 0.8 }}>
+                                                <motion.path 
+                                                    d="M0,30 Q10,20 20,30 T40,30 T60,30 T80,30 T100,30 T120,30 T140,30 T160,30 T180,30 T200,30" 
+                                                    fill="none" stroke="var(--accent-start)" strokeWidth="1"
+                                                    initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 2 }}
+                                                />
+                                                <motion.path 
+                                                    d="M0,30 Q5,40 10,30 T20,30 T30,30 T40,30 T50,30 T60,30 T70,30 T80,30 T90,30 T100,30" 
+                                                    fill="none" stroke="var(--accent-end)" strokeWidth="0.5" opacity="0.4"
+                                                    initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 3, delay: 0.5 }}
+                                                />
+                                            </svg>
+                                            <div style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                <ShieldCheck size={12} color="var(--accent-start)" />
+                                                <span style={{ fontSize: 10, fontWeight: 900, color: 'var(--accent-start)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>Signature Established: 0x{Math.random().toString(16).slice(2, 8)}</span>
+                                            </div>
                                         </div>
 
                                         <button onClick={() => setView('home')} className="btn-primary" style={{ width: '100%' }}>

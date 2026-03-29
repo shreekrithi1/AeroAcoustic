@@ -73,5 +73,20 @@
     "bandwidth": 3427.26,
     "clinical_zone": "yellow",
     "raw_wave": null
+  },
+  {
+    "id": "ed805ca2-0b1f-4e2e-9833-d939ec8d9193",
+    "timestamp": "2026-03-28T23:19:42.178439",
+    "score": 1,
+    "recommendation": "Critical spectral deviation (+44.8%). Severe turbulence detected above 3000Hz threshold. Seek immediate medical evaluation. Use rescue medication now.",
+    "centroid": 4663.29,
+    "peak_centroid": 6733.12,
+    "deviation_percent": 44.78,
+    "hf_ratio": 0.2129,
+    "turbulence_flux": 263.86,
+    "pathological_ratio": 0.8065,
+    "bandwidth": 4481.68,
+    "clinical_zone": "red",
+    "raw_wave": null
   }
 ]
